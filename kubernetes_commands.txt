@@ -1,0 +1,57 @@
+# Kubernetes Setup Reference (Pods, Deployments, Services, Ingress, ngrok)
+
+## 1. POD
+
+vim pod.yaml                             # Create/edit pod definition
+cat pod.yaml                             # View pod configuration
+kubectl apply -f pod.yaml                # Apply the pod definition
+kubectl delete pod <pod-name> -n <ns>    # Delete a pod
+kubectl get pods -n django-todo-app      # List pods in a namespace
+kubectl get pods -n django-todo-app -o wide  # Detailed pod info
+
+## 2. DEPLOYMENT
+
+vim deployment.yaml                      # Create/edit deployment
+kubectl apply -f deployment.yaml         # Apply deployment
+kubectl get deployment -n django-todo-app -o wide  # View deployment info
+kubectl get pods -n django-todo-app -o wide        # Check created pods
+
+## 3. SERVICE
+
+vim service.yaml                         # Define service
+kubectl apply -f service.yaml            # Create/update service
+kubectl get svc -n django-todo-app       # List services
+kubectl get svc django-todo-service -n django-todo-app -o wide  # Service details
+minikube service django-todo-service -n django-todo-app         # Open in browser
+minikube service django-todo-service -n django-todo-app --url   # Get service URL
+
+## 4. INGRESS
+
+vim ingress.yaml                         # Create/modify ingress
+kubectl apply -f ingress.yaml            # Apply ingress rules
+kubectl get ingress -n django-todo-app   # Check ingress status
+minikube addons enable ingress           # Enable ingress controller
+sudo vim /etc/hosts                      # Add: 192.168.49.2 paritosh.info
+curl -L http://paritosh.info             # Test custom domain
+
+## 5. NGROK
+
+wget https://bin.equinox.io/.../ngrok-stable-linux-amd64.zip  # Download
+unzip ngrok-stable-linux-amd64.zip     # Unzip
+sudo mv ngrok /usr/local/bin/          # Move to path
+ngrok config add-authtoken <token>     # Auth token setup
+ngrok http 8001                        # Expose local port
+kubectl port-forward service/django-todo-service 8001:8001 -n django-todo-app
+ngrok http 192.168.49.2:31983          # (Optional) expose NodePort
+
+## 6. NAMESPACE
+
+kubectl create namespace django-todo-app  # Create namespace
+kubectl get namespace                     # List all namespaces
+
+## 7. MINIKUBE & CLUSTER
+
+minikube start                          # Start cluster
+minikube status                         # Minikube health check
+minikube ssh                            # Access Minikube VM
+minikube dashboard                      # Open UI dashboard
